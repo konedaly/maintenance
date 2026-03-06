@@ -1,371 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Under Maintenance</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;600;800&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Maintenance</title>
 
-    :root {
-      --bg: #050a14;
-      --surface: #0c1525;
-      --border: #1a2a45;
-      --accent: #00c6ff;
-      --accent2: #ff6b35;
-      --text: #e8f0fe;
-      --muted: #4a6080;
-      --glow: rgba(0, 198, 255, 0.15);
-    }
+<style>
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    text-align:center;
+}
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Sora', sans-serif;
-      overflow: hidden;
-    }
+.container{
+    max-width:600px;
+}
 
-    /* Animated grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-      opacity: 0.5;
-      z-index: 0;
-    }
+h1{
+    font-size:48px;
+    margin-bottom:10px;
+}
 
-    /* Radial glow */
-    body::after {
-      content: '';
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -55%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(0, 198, 255, 0.07) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
+p{
+    font-size:18px;
+    opacity:0.9;
+}
 
-    .page {
-      position: relative;
-      z-index: 1;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      text-align: center;
-    }
+.loader{
+    margin:30px auto;
+    border:6px solid rgba(255,255,255,0.2);
+    border-top:6px solid white;
+    border-radius:50%;
+    width:50px;
+    height:50px;
+    animation:spin 1s linear infinite;
+}
 
-    /* Top status bar */
-    .status-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 2rem;
-      background: rgba(12, 21, 37, 0.8);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
+@keyframes spin{
+    0%{ transform:rotate(0deg); }
+    100%{ transform:rotate(360deg); }
+}
 
-    .status-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--accent2);
-    }
+.footer{
+    margin-top:25px;
+    font-size:14px;
+    opacity:0.7;
+}
+</style>
 
-    .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent2);
-      box-shadow: 0 0 8px var(--accent2);
-      animation: pulse-dot 1.8s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.7); }
-    }
-
-    /* Icon */
-    .icon-wrap {
-      width: 90px; height: 90px;
-      border-radius: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 2rem;
-      position: relative;
-      box-shadow: 0 0 40px var(--glow), inset 0 1px 0 rgba(255,255,255,0.05);
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .icon-wrap svg {
-      width: 44px; height: 44px;
-      stroke: var(--accent);
-      filter: drop-shadow(0 0 10px var(--accent));
-    }
-
-    /* Badge */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(255, 107, 53, 0.1);
-      border: 1px solid rgba(255, 107, 53, 0.3);
-      color: var(--accent2);
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-    }
-
-    /* Heading */
-    h1 {
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #e8f0fe 30%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    p.sub {
-      font-size: 1rem;
-      font-weight: 300;
-      color: #8aa0c0;
-      max-width: 420px;
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-    }
-
-    /* Info cards */
-    .cards {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.4rem;
-      text-align: left;
-      min-width: 160px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-    }
-
-    .card-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .card-value {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    /* Progress bar */
-    .progress-wrap {
-      width: 100%;
-      max-width: 380px;
-      margin-bottom: 0.75rem;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .progress-bar {
-      height: 4px;
-      background: var(--border);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), #a78bfa);
-      border-radius: 999px;
-      animation: progress-anim 3s ease forwards;
-      box-shadow: 0 0 12px var(--accent);
-    }
-
-    @keyframes progress-anim {
-      from { width: 0% }
-      to { width: 72% }
-    }
-
-    /* Footer note */
-    .footer-note {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      color: var(--muted);
-      margin-top: 2.5rem;
-      letter-spacing: 0.05em;
-    }
-
-    .footer-note a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* Scan line animation */
-    @keyframes scanline {
-      0% { top: -10%; }
-      100% { top: 110%; }
-    }
-
-    .scanline {
-      position: fixed;
-      left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(0, 198, 255, 0.04), rgba(0, 198, 255, 0.08), rgba(0, 198, 255, 0.04), transparent);
-      animation: scanline 6s linear infinite;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    /* Fade in */
-    .page > * {
-      animation: fadein 0.8s ease both;
-    }
-    .icon-wrap { animation-delay: 0.1s; }
-    .badge { animation-delay: 0.2s; }
-    h1 { animation-delay: 0.3s; }
-    p.sub { animation-delay: 0.4s; }
-    .cards { animation-delay: 0.5s; }
-    .progress-wrap { animation-delay: 0.6s; }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
 <body>
 
-<div class="scanline"></div>
+<div class="container">
 
-<div class="status-bar">
-  <span>SYSTEM STATUS</span>
-  <span class="status-dot">
-    <span class="dot"></span>
-    SERVICE UNAVAILABLE
-  </span>
-  <span id="clock">--:--:--</span>
+<h1>🔧 Maintenance | konedl Website will back soon</h1>
+
+<p>
+Our server is currently under maintenance.<br>
+We are working to fix the issue and will be back online shortly.
+</p>
+
+<div class="loader"></div>
+
+<p>Please check back later.</p>
+
+<div class="footer">
+© 2026 Konedl.site
 </div>
-
-<div class="page">
-
-  <div class="icon-wrap">
-    <!-- Wrench/tool icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-    </svg>
-  </div>
-
-  <div class="badge">
-    <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
-    Konedl.site in Maintenance
-  </div>
-
-  <h1>We'll be<br/>right back.</h1>
-
-  <p class="sub">
-    Our server is currently offline for maintenance or upgrades.
-    We're working hard to restore service as quickly as possible.
-  </p>
-
-  <div class="cards">
-    <div class="card">
-      <div class="card-label">Status</div>
-      <div class="card-value">Maintenance</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Tunnel</div>
-      <div class="card-value">Offline</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Est. Return</div>
-      <div class="card-value">Shortly</div>
-    </div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-label">
-      <span>Restoration Progress</span>
-      <span>72%</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill"></div>
-    </div>
-  </div>
-
-  <div class="footer-note">
-    Protected by Cloudflare &nbsp;·&nbsp; Error 521 / 522 / 523
-  </div>
 
 </div>
 
-<script>
-  // Live clock
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB');
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
-</script>
 </body>
 </html>
